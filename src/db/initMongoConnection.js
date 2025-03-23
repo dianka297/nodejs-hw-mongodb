@@ -6,8 +6,7 @@ const pswd = getEnvVar('MONGODB_PASSWORD');
 const url = getEnvVar('MONGODB_URL');
 const db = getEnvVar('MONGODB_DB');
 
-const uri = "mongodb+srv://dianamakharadze96:01-E729D@cluster.jryok.mongodb.net/?retryWrites=true&w=majority&appName=Cluster";
-
+const DB_URI = `mongodb+srv://${user}:${pswd}@${url}/${db}?retryWrites=true&w=majority`;
 
 export async function initMongoConnection() {
     try{
