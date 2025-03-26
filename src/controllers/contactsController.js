@@ -23,4 +23,4 @@ export async function getContactsById(req, res){
             message: `Successfully found contact with id ${contactId}!`,
             data: contact,
         });
-}
+    }
