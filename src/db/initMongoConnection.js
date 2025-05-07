@@ -7,7 +7,7 @@ const db = getEnvVar("MONGODB_DB");
 
 const uri = `mongodb+srv://${user}:${pswd}@cluster.jryok.mongodb.net/${db}?retryWrites=true&w=majority`;
 
-export async function initMongoConnection() {
+export default async function initMongoConnection() {
   try {
     await mongoose.connect(uri);
     console.log("✅ Mongo connection successfully established!");
