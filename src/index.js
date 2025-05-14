@@ -6,4 +6,4 @@ async function startApp(){
     setupServer();
 }
 
-startApp();
+bootstrap();

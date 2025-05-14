@@ -1,19 +1,43 @@
 import express from "express";
 import pino from "pino-http";
 import cors from "cors";
-import contactRoutes from "./routes/contactRoutes.js";
-import { getEnvVar } from "./utils/getEnvVar.js";
+import studentsRouter from './routers/contacts.js';
+import { getEnvVar } from './utils/getEnvVar.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
-export function setupServer() {
+const PORT = Number(getEnvVar('PORT', '3000'));
 
-    const app = express();
-    const PORT =  getEnvVar('PORT', '3002');
+export const setupServer = () => {
+  const app = express();
 
-    app.use(express.json());
-    app.use(cors());
-    app.use(pino());
+  app.use(
+    express.json({
+      type: ['application/json', 'application/vnd.api+json'],
+      limit: '100kb',
+    }),
+  );
+  app.use(cors());
 
-    app.use('/contacts', contactRoutes);
+  app.use(
+    pino({
+      transport: {
+        target: 'pino-pretty',
+      },
+    }),
+  );
+
+  app.get('/', (req, res) => {
+    res.json({
+      message: 'Hello world!',
+    });
+  });
+
+  app.use(studentsRouter);
+
+  app.use('*', notFoundHandler);
+
+  app.use(errorHandler);
 
 
     app.listen( PORT, ()=>{
