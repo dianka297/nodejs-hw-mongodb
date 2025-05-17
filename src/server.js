@@ -10,7 +10,7 @@ import { errorHandler } from './middlewares/errorHandler.js';
 
 dotenv.config();
 
-const PORT = Number(env('PORT', '3000')) || 3000;
+const PORT = Number(getEnvVar('PORT', '3000')) || 3000;
 
 const setupServer = () => {
   const app = express();
