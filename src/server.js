@@ -35,7 +35,7 @@ export const setupServer = () => {
       });
     });
   
-    app.use(studentsRouter);
+    app.use(contactsRouter);
   
     app.use('*', notFoundHandler);
   
