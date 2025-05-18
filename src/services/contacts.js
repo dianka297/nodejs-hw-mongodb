@@ -1,4 +1,4 @@
-import { ContactsCollection } from '../db/models/contacts.js';
+import ContactsCollection from '../db/models/contacts.js';
 
 export const getContacts = async () => {
   const contacts = await ContactsCollection.find();
@@ -16,9 +16,7 @@ export const createContact = async (payload) => {
 };
 
 export const deleteContact = async (contactId) => {
-  const contact = await ContactsCollection.findOneAndDelete({
-    _id: contactId,
-  });
+  const contact = await ContactsCollection.findOneAndDelete({ _id: contactId });
   return contact;
 };
 
