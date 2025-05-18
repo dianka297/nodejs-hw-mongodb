@@ -3,7 +3,7 @@ import { getEnvVar } from "../utils/getEnvVar.js";
 
 const user = getEnvVar('MONGODB_USER');
 const pswd = getEnvVar('MONGODB_PASSWORD');
-const url = getEnvVar('MONGODB_URL');
+const url = getEnvVar('MONGODB_URI');
 const db = getEnvVar('MONGODB_DB');
 
 
