@@ -1,14 +1,17 @@
-export const calculatePaginationData = (count, perPage, page) => {
-    const totalPages = Math.ceil(count / perPage);
-    const hasNextPage = Boolean(totalPages - page);
-    const hasPreviousPage = page !== 1;
-  
-    return {
-      page,
-      perPage,
-      totalItems: count,
-      totalPages,
-      hasNextPage,
-      hasPreviousPage,
-    };
+const parseBoolean = (value) => {
+  if (typeof value === 'string') {
+    if (value.toLowerCase() === 'true') return true;
+    if (value.toLowerCase() === 'false') return false;
+  }
+  return undefined;
+};
+
+export const parseFilterParams = (query) => {
+  const { isFavourite } = query;
+
+  const parsedIsFavourite = parseBoolean(isFavourite);
+
+  return {
+    isFavourite: parsedIsFavourite,
   };
+};
