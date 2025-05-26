@@ -25,7 +25,7 @@ const setupServer = () => {
     res.json({ message: 'Hello world!' });
   });
 
-  app.use(contactsRouter);
+app.use('/api', router);
 
   app.use('*', notFoundHandler); // Обработка 404
 
