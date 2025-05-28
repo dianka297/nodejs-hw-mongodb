@@ -1,77 +1,62 @@
-import { ONE_DAY } from '../constants/index.js';
-import {
-  loginUser,
-  logoutUser,
-  refreshUsersSession,
-  registerUser,
-} from '../services/auth.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import User from '../models/user.js';
+import Session from '../models/session.js';
+import createHttpError from 'http-errors';
+import { ACCESS_SECRET, REFRESH_SECRET } from '../constants/index.js';
 
-export const registerUserController = async (req, res) => {
-  const user = await registerUser(req.body);
-
-  res.status(201).json({
-    status: 201,
-    message: 'Successfully registered a user!',
-    data: user,
-  });
-};
-
-export const loginUserController = async (req, res) => {
-  const session = await loginUser(req.body);
-
-  res.cookie('refreshToken', session.refreshToken, {
-    httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
-  });
-  res.cookie('sessionId', session._id, {
-    httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
-  });
-
-  res.json({
-    status: 200,
-    message: 'Successfully logged in an user!',
-    data: {
-      accessToken: session.accessToken,
-    },
-  });
-};
-
-export const logoutUserController = async (req, res) => {
-  if (req.cookies.sessionId) {
-    await logoutUser(req.cookies.sessionId);
+export const registerUser = async ({ email, password }) => {
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    throw createHttpError(409, 'Email in use');
   }
 
-  res.clearCookie('sessionId');
-  res.clearCookie('refreshToken');
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const user = await User.create({ email, password: hashedPassword });
 
-  res.status(204).send();
+  return { email: user.email, id: user._id };
 };
 
-const setupSession = (res, session) => {
-  res.cookie('refreshToken', session.refreshToken, {
-    httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
-  });
-  res.cookie('sessionId', session._id, {
-    httpOnly: true,
-    expires: new Date(Date.now() + ONE_DAY),
-  });
+export const loginUser = async ({ email, password }) => {
+  const user = await User.findOne({ email });
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    throw createHttpError(401, 'Invalid email or password');
+  }
+
+  const accessToken = jwt.sign({ userId: user._id }, ACCESS_SECRET, { expiresIn: '1h' });
+  const refreshToken = jwt.sign({ userId: user._id }, REFRESH_SECRET, { expiresIn: '1d' });
+
+  const session = await Session.create({ user: user._id, token: refreshToken });
+
+  return {
+    accessToken,
+    refreshToken,
+    _id: session._id,
+  };
 };
 
-export const refreshUserSessionController = async (req, res) => {
-  const session = await refreshUsersSession({
-    sessionId: req.cookies.sessionId,
-    refreshToken: req.cookies.refreshToken,
-  });
-
-  setupSession(res, session);
-
-  res.json({
-    status: 200,
-    message: 'Successfully refreshed a session!',
-    data: {
-      accessToken: session.accessToken,
-    },
-  });
+export const logoutUser = async (sessionId) => {
+  await Session.findByIdAndDelete(sessionId);
 };
+
+export const refreshUsersSession = async ({ sessionId, refreshToken }) => {
+  const session = await Session.findById(sessionId);
+  if (!session || session.token !== refreshToken) {
+    throw createHttpError(401, 'Invalid session');
+  }
+
+  const decoded = jwt.verify(refreshToken, REFRESH_SECRET);
+
+  const newAccessToken = jwt.sign({ userId: decoded.userId }, ACCESS_SECRET, { expiresIn: '1h' });
+  const newRefreshToken = jwt.sign({ userId: decoded.userId }, REFRESH_SECRET, { expiresIn: '1d' });
+
+  session.token = newRefreshToken;
+  await session.save();
+
+  return {
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
+    _id: session._id,
+  };
+};
+

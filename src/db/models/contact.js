@@ -32,4 +32,11 @@ const contactsSchema = new Schema(
   },
 );
 
+const contactSchema = new Schema({
+  name: String,
+  email: String,
+  phone: String,
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+});
+
 export const ContactsCollection = model('contacts', contactsSchema);
