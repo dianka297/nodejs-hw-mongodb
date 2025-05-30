@@ -12,3 +12,4 @@ const sessionsSchema = new Schema(
 );
 
 export const Session = model('sessions', sessionsSchema); 
+
