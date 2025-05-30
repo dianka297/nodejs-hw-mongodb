@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../db/models/user.js';
-import Session from '../db/models/session.js';
+import { Session } from '../db/models/session.js'; 
 import createHttpError from 'http-errors';
 import { ACCESS_SECRET, REFRESH_SECRET } from '../constants/index.js';
 
