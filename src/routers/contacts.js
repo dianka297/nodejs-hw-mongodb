@@ -7,8 +7,9 @@ import {
   upsertContactController,
   patchContactController
 } from '../controllers/contacts.js';
-import { ctrlWrapper } from '../../helpers/index.js';
+
 import auth from '../middlewares/auth.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 const router = express.Router();
 
