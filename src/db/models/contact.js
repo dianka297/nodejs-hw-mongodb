@@ -23,7 +23,7 @@ const contactSchema = new Schema(
       enum: ['work', 'home', 'personal'],
       default: 'personal',
     },
-    userId: {
+    owner: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
@@ -35,5 +35,4 @@ const contactSchema = new Schema(
   }
 );
 
-// ✅ Важливо: модель має бути названа "Contact" і експортуватися іменовано
 export const Contact = model('contacts', contactSchema);

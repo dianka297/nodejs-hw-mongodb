@@ -5,6 +5,15 @@ const userSchema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    subscription: {
+      type: String,
+      enum: ['starter', 'pro', 'business'],
+      default: 'starter',
+    },
+    token: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -12,12 +21,12 @@ const userSchema = new Schema(
   }
 );
 
-// При серіалізації користувача (наприклад, при відповіді клієнту), не повертати пароль
+
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
+  delete obj.token;
   return obj;
 };
 
-// ✅ Експортуємо з уніфікованою назвою User (так само як Contact, Session)
 export const User = model('users', userSchema);

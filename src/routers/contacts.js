@@ -1,62 +1,24 @@
-import { Router } from 'express';
+import express from 'express';
 import {
+  getContactsController,
+  getContactByIdController,
   createContactController,
   deleteContactController,
-  getContactByIdController,
-  getContactsController,
   upsertContactController,
-  patchContactController,
+  patchContactController
 } from '../controllers/contacts.js';
-import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import { validateBody } from '../middlewares/validateBody.js';
-import {
-  createContactSchema,
-  updateContactSchema,
-} from '../validation/contact.js';
-import { isValidId } from '../middlewares/isValidId.js';
-import { authenticate } from '../middlewares/authenticate.js';
-import { checkContactAccess } from '../middlewares/checkContactAccess.js';
+import { ctrlWrapper } from '../helpers/index.js';
+import auth from '../middlewares/auth.js';
 
-const router = Router();
+const router = express.Router();
 
-router.use(authenticate);
+router.use(auth);
 
 router.get('/', ctrlWrapper(getContactsController));
-
-router.get(
-  '/:contactId',
-  checkContactAccess,
-  isValidId,
-  ctrlWrapper(getContactByIdController),
-);
-
-router.post(
-  '/',
-  validateBody(createContactSchema),
-  ctrlWrapper(createContactController),
-);
-
-router.delete(
-  '/:contactId',
-  checkContactAccess,
-  isValidId,
-  ctrlWrapper(deleteContactController),
-);
-
-router.put(
-  '/:contactId',
-  checkContactAccess,
-  isValidId,
-  validateBody(updateContactSchema),
-  ctrlWrapper(upsertContactController),
-);
-
-router.patch(
-  '/:contactId',
-  checkContactAccess,
-  isValidId,
-  validateBody(updateContactSchema),
-  ctrlWrapper(patchContactController),
-);
+router.get('/:contactId', ctrlWrapper(getContactByIdController));
+router.post('/', ctrlWrapper(createContactController));
+router.delete('/:contactId', ctrlWrapper(deleteContactController));
+router.put('/:contactId', ctrlWrapper(upsertContactController));
+router.patch('/:contactId', ctrlWrapper(patchContactController));
 
 export default router;
