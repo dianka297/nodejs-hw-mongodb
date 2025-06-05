@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import { Contact } from '../db/models/contacts.js';
+import { Contact } from '../db/models/contact.js';
 
 export const checkContactAccess = async (req, res, next) => {
   const { user } = req;
