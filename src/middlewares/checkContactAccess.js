@@ -1,27 +1,24 @@
 import createHttpError from 'http-errors';
-import { Contact } from '../db/models/contact.js';
+import { Contact } from '../models/contact.js';
 
 export const checkContactAccess = async (req, res, next) => {
   const { user } = req;
   if (!user) {
-    next(createHttpError(401));
-    return;
+    return next(createHttpError(401));
   }
 
   const { contactId } = req.params;
   if (!contactId) {
-    next(createHttpError(403));
-    return;
+    return next(createHttpError(403));
   }
 
-  const contact = await ContactsCollection.findOne({
+  const contact = await Contact.findOne({
     _id: contactId,
     userId: user._id,
   });
 
   if (!contact) {
-    next(createHttpError(403));
-    return;
+    return next(createHttpError(403));
   }
 
   req.contact = contact;
