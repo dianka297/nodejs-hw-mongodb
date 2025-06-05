@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
 import cookieParser from 'cookie-parser';
+
 import router from './routers/index.js';
-import { getEnvVar } from './utils/getEnvVar.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
@@ -13,7 +13,8 @@ const setupServer = () => {
   const app = express();
 
   app.use(express.json());
-  app.use(cors());
+  app.use(cors({ origin: true, credentials: true }));
+  app.use(cookieParser());
 
   app.use(
     pino({
@@ -25,15 +26,19 @@ const setupServer = () => {
     res.json({ message: 'Hello world!' });
   });
 
-app.use('/api', router);
+  // Підключення маршрутів без /api
+  app.use(router);
 
-  app.use('*', notFoundHandler); // Обработка 404
+  // Обробка 404
+  app.use('*', notFoundHandler);
 
-  app.use(errorHandler); // Обработка ошибок
+  // Централізована обробка помилок
+  app.use(errorHandler);
 
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(` Server is running on port ${PORT}`);
   });
 };
 
 export default setupServer;
+
