@@ -9,11 +9,7 @@ const userSchema = new Schema(
       type: String,
       enum: ['starter', 'pro', 'business'],
       default: 'starter',
-    },
-    token: {
-      type: String,
-      default: null,
-    },
+    }
   },
   {
     timestamps: true,

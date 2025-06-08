@@ -1,22 +1,24 @@
-import express from 'express';
+import express from 'express'; 
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import authRouter from './routers/auth.js';
+import contactsRouter from './routers/contacts.js'; // ✅ перенесено вище
 
 export function setupServer() {
   const app = express();
 
   // Middleware
   app.use(cors({
-    origin: 'http://localhost:3000', // або твій фронт, якщо є
-    credentials: true, // дозволити куки
+    origin: 'http://localhost:3000',
+    credentials: true,
   }));
   app.use(express.json());
   app.use(cookieParser());
 
   // Роути
   app.use('/auth', authRouter);
+  app.use('/contacts', contactsRouter); // ✅ додано сюди
 
   // Обробка 404
   app.use((req, res, next) => {
@@ -38,4 +40,3 @@ export function setupServer() {
 
   return app;
 }
-
