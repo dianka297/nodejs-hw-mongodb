@@ -55,18 +55,29 @@ export const refreshSessionController = async (req, res) => {
     throw createHttpError(401, 'Refresh token missing');
   }
 
-  const { accessToken, refreshToken: newRefreshToken } = await refreshSession(refreshToken);
+  const {
+    accessToken,
+    refreshToken: newRefreshToken,
+    sessionId,
+  } = await refreshSession(refreshToken);
 
-  res.cookie('refreshToken', newRefreshToken, {
-    httpOnly: true,
-    sameSite: 'strict',
-    secure: true,
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
-
-  res.status(200).json({
-    status: 'success',
-    message: 'Successfully refreshed a session!',
-    data: { accessToken },
-  });
+  res
+    .cookie('refreshToken', newRefreshToken, {
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    })
+    .cookie('sessionId', sessionId, {
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    })
+    .status(200)
+    .json({
+      status: 'success',
+      message: 'Successfully refreshed a session!',
+      data: { accessToken },
+    });
 };

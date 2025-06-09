@@ -57,7 +57,11 @@ export const loginUser = async ({ email, password }) => {
     refreshTokenValidUntil,
   });
 
-  return { accessToken, refreshToken, sessionId: session._id };
+  return {
+    accessToken,
+    refreshToken,
+    sessionId: session._id.toString(),
+  };
 };
 
 // ------------------ Логаут ------------------
@@ -87,10 +91,10 @@ export const refreshSession = async (refreshToken) => {
     throw createHttpError(401, 'Refresh token expired');
   }
 
-  // Видалити стару сесію
+  // Видаляємо стару сесію
   await Session.deleteMany({ userId: payload.id });
 
-  // Створити нову
+  // Генеруємо нові токени
   const newAccessToken = jwt.sign({ id: payload.id }, JWT_SECRET, { expiresIn: '15m' });
   const newRefreshToken = jwt.sign({ id: payload.id }, JWT_SECRET, { expiresIn: '30d' });
 
@@ -106,6 +110,9 @@ export const refreshSession = async (refreshToken) => {
     refreshTokenValidUntil,
   });
 
-  return { accessToken: newAccessToken, refreshToken: newRefreshToken };
+  return {
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
+    sessionId: newSession._id.toString(), 
+  };
 };
-

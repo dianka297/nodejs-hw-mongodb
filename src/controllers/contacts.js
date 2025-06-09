@@ -11,11 +11,29 @@ import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getContactsController = async (req, res) => {
-  const contacts = await getContacts(req.user._id);
-  res.json({
+  const { page, perPage } = parsePaginationParams(req.query);
+  const sort = parseSortParams(req.query);
+  const filter = parseFilterParams(req.query);
+
+  const result = await getContacts(req.user._id, {
+    page,
+    limit: perPage,
+    sort,
+    filter,
+  });
+
+  const totalPages = Math.ceil(result.total / result.limit);
+
+  res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
-    data: contacts,
+    data: {
+      contacts: result.contacts,
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
+      totalPages,
+    },
   });
 };
 
@@ -36,7 +54,7 @@ export const createContactController = async (req, res) => {
   const contact = await createContact(req.body, req.user._id);
   res.status(201).json({
     status: 201,
-    message: `Successfully created a contact!`,
+    message: 'Successfully created a contact!',
     data: contact,
   });
 };
@@ -59,7 +77,7 @@ export const upsertContactController = async (req, res) => {
   const status = result.isNew ? 201 : 200;
   res.status(status).json({
     status,
-    message: `Successfully upserted a contact!`,
+    message: 'Successfully upserted a contact!',
     data: result.contact,
   });
 };
@@ -72,8 +90,7 @@ export const patchContactController = async (req, res) => {
   }
   res.json({
     status: 200,
-    message: `Successfully patched a contact!`,
+    message: 'Successfully patched a contact!',
     data: result.contact,
   });
 };
-
