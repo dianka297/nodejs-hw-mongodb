@@ -1,27 +1,29 @@
-import jwt from 'jsonwebtoken';
 import createHttpError from 'http-errors';
 import { User } from '../db/models/user.js';
-
-const { SECRET_KEY } = process.env;
+import { Session } from '../db/models/session.js';
 
 const auth = async (req, res, next) => {
-  const { authorization = '' } = req.headers;
-  const [bearer, token] = authorization.split(' ');
-
-  if (bearer !== 'Bearer' || !token) {
-    return next(createHttpError(401, 'Not authorized'));
-  }
-
   try {
-    const { id } = jwt.verify(token, SECRET_KEY);
-    const user = await User.findById(id);
-    if (!user || user.token !== token) {
-      return next(createHttpError(401, 'Not authorized'));
+    const { sessionId } = req.cookies;
+
+    if (!sessionId) {
+      return next(createHttpError(401, 'Session ID missing'));
+    }
+
+    const session = await Session.findById(sessionId);
+    if (!session || session.accessTokenValidUntil < new Date()) {
+      return next(createHttpError(401, 'Session not found or expired'));
+    }
+
+    const user = await User.findById(session.userId);
+    if (!user) {
+      return next(createHttpError(401, 'User not found'));
     }
 
     req.user = user;
+    req.session = session;
     next();
-  } catch {
+  } catch (error) {
     next(createHttpError(401, 'Not authorized'));
   }
 };

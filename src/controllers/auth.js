@@ -19,25 +19,32 @@ export const registerUserController = async (req, res) => {
 export const loginUserController = async (req, res) => {
   const { accessToken, refreshToken, sessionId } = await loginUser(req.body);
 
-
-  // зберігаємо refreshToken в cookies
-  res.cookie('refreshToken', refreshToken, {
-    httpOnly: true,
-    sameSite: 'strict',
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 днів
-  });
-
-  res.status(200).json({
-    status: 'success',
-    message: 'Successfully logged in an user!',
-    data: { accessToken },
-  });
+  res
+    .cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: true, // встанови false для dev без HTTPS
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 днів
+    })
+    .cookie('sessionId', sessionId, {
+      httpOnly: true,
+      sameSite: 'strict',
+      secure: true, // встанови false для dev без HTTPS
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    })
+    .status(200)
+    .json({
+      status: 'success',
+      message: 'Successfully logged in a user!',
+      data: { accessToken },
+    });
 };
 
 export const logoutUserController = async (req, res) => {
   await logoutUser(req.user._id);
 
   res.clearCookie('refreshToken');
+  res.clearCookie('sessionId');
   res.status(204).send();
 };
 
@@ -50,10 +57,10 @@ export const refreshSessionController = async (req, res) => {
 
   const { accessToken, refreshToken: newRefreshToken } = await refreshSession(refreshToken);
 
-  // Оновлюємо cookie
   res.cookie('refreshToken', newRefreshToken, {
     httpOnly: true,
     sameSite: 'strict',
+    secure: true,
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
 
