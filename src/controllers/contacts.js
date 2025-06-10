@@ -23,16 +23,20 @@ export const getContactsController = async (req, res) => {
   });
 
   const totalPages = Math.ceil(result.total / result.limit);
+  const hasPreviousPage = result.page > 1;
+  const hasNextPage = result.page < totalPages;
 
   res.status(200).json({
     status: 200,
     message: 'Successfully found contacts!',
     data: {
-      contacts: result.contacts,
-      total: result.total,
+      data: result.contacts,            // 🔄 contacts → data
       page: result.page,
-      limit: result.limit,
+      perPage: result.limit,            // 🔄 limit → perPage
+      totalItems: result.total,         // 🔄 total → totalItems
       totalPages,
+      hasPreviousPage,
+      hasNextPage,
     },
   });
 };
