@@ -3,7 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
 import authRouter from './routers/auth.js';
-import contactsRouter from './routers/contacts.js'; // ✅ перенесено вище
+import contactsRouter from './routers/contacts.js';
 
 export function setupServer() {
   const app = express();
@@ -16,9 +16,14 @@ export function setupServer() {
   app.use(express.json());
   app.use(cookieParser());
 
-  // Роути
+  // Тестовий маршрут для перевірки деплою
+  app.post('/ping', (req, res) => {
+    res.json({ message: 'pong' });
+  });
+
+  // Роутери
   app.use('/auth', authRouter);
-  app.use('/contacts', contactsRouter); // ✅ додано сюди
+  app.use('/contacts', contactsRouter);
 
   // Обробка 404
   app.use((req, res, next) => {
