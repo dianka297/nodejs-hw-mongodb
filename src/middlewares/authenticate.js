@@ -23,7 +23,8 @@ const authenticate = async (req, res, next) => {
       return next(createHttpError(401, 'User not found'));
     }
 
-    req.user = user;
+   
+    req.user = { _id: user._id.toString() };
     req.session = session;
     next();
   } catch {
@@ -32,4 +33,3 @@ const authenticate = async (req, res, next) => {
 };
 
 export default authenticate;
-
