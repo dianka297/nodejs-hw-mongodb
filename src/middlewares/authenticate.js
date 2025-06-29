@@ -1,9 +1,7 @@
-import jwt from 'jsonwebtoken';
+
 import createHttpError from 'http-errors';
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
-
-const { JWT_SECRET } = process.env;
 
 const authenticate = async (req, res, next) => {
   try {
@@ -27,9 +25,10 @@ const authenticate = async (req, res, next) => {
     req.user = { _id: user._id.toString() };
     req.session = session;
     next();
-  } catch {
+  } catch (err) {
     next(createHttpError(401, 'Not authorized'));
   }
 };
 
 export default authenticate;
+
