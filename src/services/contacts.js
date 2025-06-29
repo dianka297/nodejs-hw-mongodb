@@ -1,18 +1,15 @@
 import { Contact } from '../db/models/contact.js';
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 
+/* ───────── GET ALL ───────── */
 export const getContacts = async (
   userId,
-  {
-    page = 1,
-    limit = 10,
-    sort = { sortBy: '_id', sortOrder: 'asc' },
-    filter = {},
-  }
+  { page = 1, limit = 10, sort = { sortBy: '_id', sortOrder: 'asc' }, filter = {} }
 ) => {
   const skip = (page - 1) * limit;
 
-  const query = { owner: new mongoose.Types.ObjectId(userId), ...filter };
+  /* ключове — фільтруємо по userId */
+  const query = { userId: new Types.ObjectId(userId), ...filter };
   const sortQuery = { [sort.sortBy]: sort.sortOrder === 'desc' ? -1 : 1 };
 
   const [contacts, total] = await Promise.all([
@@ -20,46 +17,27 @@ export const getContacts = async (
     Contact.countDocuments(query),
   ]);
 
-  return {
-    contacts,
-    total,
-    page: Number(page),
-    limit: Number(limit),
-  };
+  return { contacts, total, page: +page, limit: +limit };
 };
 
-export const getContactById = (id, userId) => {
-  return Contact.findOne({
-    _id: id,
-    owner: new mongoose.Types.ObjectId(userId),
-  });
-};
+/* ───────── GET BY ID ───────── */
+export const getContactById = (id, userId) =>
+  Contact.findOne({ _id: id, userId: new Types.ObjectId(userId) });
 
-export const createContact = (data, userId) => {
-  return Contact.create({
-    ...data,
-    owner: new mongoose.Types.ObjectId(userId),
-  });
-};
+/* ───────── CREATE ───────── */
+export const createContact = (data, userId) =>
+  Contact.create({ ...data, userId: new Types.ObjectId(userId) });
 
-export const updateContact = (id, data, options = {}, userId) => {
-  return Contact.findOneAndUpdate(
-    {
-      _id: id,
-      owner: new mongoose.Types.ObjectId(userId),
-    },
+/* ───────── UPDATE (PUT/PATCH) ───────── */
+export const updateContact = (id, data, options = {}, userId) =>
+  Contact.findOneAndUpdate(
+    { _id: id, userId: new Types.ObjectId(userId) },
     data,
-    { ...options, new: true }
-  ).then((contact) => ({
-    contact,
-    isNew: options.upsert && !contact,
-  }));
-};
+    { ...options, new: true },
+  ).then(c => ({ contact: c, isNew: options.upsert && !c }));
 
-export const deleteContact = (id, userId) => {
-  return Contact.findOneAndDelete({
-    _id: id,
-    owner: new mongoose.Types.ObjectId(userId),
-  });
-};
+/* ───────── DELETE ───────── */
+export const deleteContact = (id, userId) =>
+  Contact.findOneAndDelete({ _id: id, userId: new Types.ObjectId(userId) });
+
 
