@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-/* схеми Joi */
+/* ---------- Joi-схеми ---------- */
 import {
   registerUserSchema,
   loginUserSchema,
@@ -8,52 +8,60 @@ import {
   resetPwdSchema,
 } from '../validation/auth.js';
 
-/* контролери */
+/* ---------- Контролери ---------- */
 import {
   registerUserController,
   loginUserController,
   logoutUserController,
   refreshSessionController,
 } from '../controllers/auth.js';
-import { sendResetEmailCtrl }  from '../controllers/auth/sendResetEmail.js';
-import { resetPasswordCtrl }   from '../controllers/auth/resetPassword.js';
 
-/* utils / middlewares */
-import { validateBody }   from '../middlewares/validateBody.js';
-import { ctrlWrapper }    from '../utils/ctrlWrapper.js';
-import authenticate        from '../middlewares/authenticate.js';
+import { sendResetEmailCtrl } from '../controllers/sendResetEmail.js';
+import { resetPasswordCtrl }  from '../controllers/resetPassword.js';
+
+/* ---------- Utils / middlewares ---------- */
+import { validateBody } from '../middlewares/validateBody.js';
+import { ctrlWrapper }  from '../utils/ctrlWrapper.js';
+import authenticate      from '../middlewares/authenticate.js';
 
 const router = Router();
 
 /* ---------- BASIC AUTH ---------- */
-router.post('/register',
+router.post(
+  '/register',
   validateBody(registerUserSchema),
-  ctrlWrapper(registerUserController)
+  ctrlWrapper(registerUserController),
 );
 
-router.post('/login',
+router.post(
+  '/login',
   validateBody(loginUserSchema),
-  ctrlWrapper(loginUserController)
+  ctrlWrapper(loginUserController),
 );
 
-router.post('/refresh',
-  ctrlWrapper(refreshSessionController)
+router.post(
+  '/refresh',
+  ctrlWrapper(refreshSessionController),
 );
 
-router.post('/logout',
+router.post(
+  '/logout',
   authenticate,
-  ctrlWrapper(logoutUserController)
+  ctrlWrapper(logoutUserController),
 );
 
 /* ---------- HW6: RESET PASSWORD ---------- */
-router.post('/send-reset-email',
+router.post(
+  '/send-reset-email',
   validateBody(emailSchema),
-  ctrlWrapper(sendResetEmailCtrl)
+  ctrlWrapper(sendResetEmailCtrl),
 );
 
-router.post('/reset-pwd',
+router.post(
+  '/reset-pwd',
   validateBody(resetPwdSchema),
-  ctrlWrapper(resetPasswordCtrl)
+  ctrlWrapper(resetPasswordCtrl),
 );
 
 export default router;
+
