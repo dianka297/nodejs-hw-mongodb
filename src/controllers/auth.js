@@ -1,4 +1,4 @@
-// src/controllers/auth/index.js
+
 import createHttpError from 'http-errors';
 import {
   registerUser,
