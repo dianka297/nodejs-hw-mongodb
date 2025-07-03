@@ -1,24 +1,24 @@
 import Joi from 'joi';
 
-/* ---------- старі схеми ---------- */
+/* реєстрація */
 export const registerUserSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
 
+/* логін */
 export const loginUserSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
 
-/* ---------- НОВЕ ---------- */
-/* тіло для POST /auth/send-reset-email */
+/* надсилання листа */
 export const emailSchema = Joi.object({
   email: Joi.string().email().required(),
 });
 
-/* тіло для POST /auth/reset-pwd */
+/* скидання пароля */
 export const resetPwdSchema = Joi.object({
   token: Joi.string().required(),
   password: Joi.string().min(6).required(),
