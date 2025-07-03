@@ -1,14 +1,17 @@
-import dotenv from "dotenv";
+export function getEnvVar(name, defaultValue) {
+  if (typeof name !== 'string' || name.trim() === '') {
+    throw new Error(`Invalid environment variable name: '${name}'`);
+  }
 
-dotenv.config();
+  const value = process.env[name];
 
-export function getEnvVar(name, defaultValue){
-    const value = process.env[name];
+  if (value !== undefined && value !== '') {
+    return value;
+  }
 
-    if (value) return value;
+  if (defaultValue !== undefined) {
+    return defaultValue;
+  }
 
-    if(defaultValue) return defaultValue;
-
-
-    throw new Error(`Missing: process.env['${name}'].`);
+  throw new Error(`Missing required environment variable: '${name}'`);
 }
