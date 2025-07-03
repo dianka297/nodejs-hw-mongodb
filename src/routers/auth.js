@@ -14,7 +14,7 @@ import {
   loginUserController,
   logoutUserController,
   refreshSessionController,
-} from '../controllers/auth.js';
+} from '../controllers/auth.js/index.js';
 
 import { sendResetEmailCtrl } from '../controllers/auth/sendResetEmail.js';
 import { resetPasswordCtrl }  from '../controllers/auth/resetPassword.js';
