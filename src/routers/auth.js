@@ -16,8 +16,8 @@ import {
   refreshSessionController,
 } from '../controllers/auth.js';
 
-import { sendResetEmailCtrl } from '../controllers/sendResetEmail.js';
-import { resetPasswordCtrl }  from '../controllers/resetPassword.js';
+import { sendResetEmailCtrl } from '../controllers/auth/sendResetEmail.js';
+import { resetPasswordCtrl }  from '../controllers/auth/resetPassword.js';
 
 /* ---------- Utils / middlewares ---------- */
 import { validateBody } from '../middlewares/validateBody.js';
