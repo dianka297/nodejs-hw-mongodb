@@ -94,7 +94,7 @@ export const refreshSession = async (refreshToken) => {
   // Видаляємо стару сесію
   await Session.deleteMany({ userId: payload.id });
 
-  // Генеруємо нові токени
+  // Генеруємо нові токени 
   const newAccessToken = jwt.sign({ id: payload.id }, JWT_SECRET, { expiresIn: '15m' });
   const newRefreshToken = jwt.sign({ id: payload.id }, JWT_SECRET, { expiresIn: '30d' });
 
