@@ -11,16 +11,17 @@ import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
-import { saveFileToUploadDir }   from '../utils/saveFileToUploadDir.js';
-import { saveFileToCloudinary }  from '../utils/saveFileToCloudinary.js';
-import { getEnvVar }             from '../utils/getEnvVar.js';
+import { saveFileToUploadDir }  from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { getEnvVar }            from '../utils/getEnvVar.js';
 
 /* ───────── helpers ───────── */
 const handlePhoto = async (file) => {
   if (!file) return undefined;
 
-  return getEnvVar('ENABLE_CLOUDINARY') === 'true'
-    ? await saveFileToCloudinary(file)
+  // для Cloudinary достатньо передати шлях до файлу
+  return getEnvVar('ENABLE_CLOUDINARY', 'false') === 'true'
+    ? await saveFileToCloudinary(file.path)
     : await saveFileToUploadDir(file);
 };
 
@@ -78,7 +79,7 @@ export const createContactController = async (req, res, next) => {
     const photoUrl = await handlePhoto(req.file);
 
     const contact = await createContact(
-      { ...req.body, userId: req.user._id, photo: photoUrl },
+      { ...req.body, owner: req.user._id, photo: photoUrl },
       req.user._id,
     );
 
@@ -143,6 +144,5 @@ export const patchContactController = async (req, res, next) => {
     });
   } catch (err) { next(err); }
 };
-
 
 
