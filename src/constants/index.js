@@ -40,7 +40,7 @@ export const CLOUDINARY = {
 /*  TEMP_UPLOAD_DIR – куди спочатку зберігаємо файл       */
 /*  UPLOAD_DIR      – фінальна папка для статичних файлів */
 export const TEMP_UPLOAD_DIR = 'temp';     // ▶ додай/зміни за потреби
-export const UPLOAD_DIR      = 'public';   // ▶ додай/зміни за потреби
+export const UPLOAD_DIR      = 'public/uploads';   // ▶ додай/зміни за потреби
 
 
 
