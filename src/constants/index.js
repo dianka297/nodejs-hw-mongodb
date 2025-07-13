@@ -37,4 +37,4 @@ export const CLOUDINARY = {
 
 /* ──────── 📂  Локальні каталоги для завантажень ──────── */
 export const TEMP_UPLOAD_DIR = 'temp';
-export const UPLOAD_DIR      = 'public';
+export const UPLOAD_DIR = 'public';
