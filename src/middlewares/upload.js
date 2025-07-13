@@ -1,16 +1,13 @@
 // src/middlewares/upload.js
 import multer from 'multer';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { TEMP_UPLOAD_DIR } from '../constants/index.js';
 
-// временная папка tmp/ рядом с корнем проекта
-const __filename = fileURLToPath(import.meta.url);
-const __dirname  = dirname(__filename);
-
-const uploadDir = path.join(__dirname, '../../tmp');
+// Вказуємо multer, куди тимчасово зберігати файли
+const uploadDir = path.resolve(TEMP_UPLOAD_DIR);
 
 export const upload = multer({
   dest: uploadDir,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 МБ
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB
 });
+
