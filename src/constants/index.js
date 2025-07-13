@@ -26,7 +26,7 @@ export const JWT_RESET_EXPIRES = '5m';
 
 /* ---------- Домен фронтенду ---------- */
 export const APP_DOMAIN =
-  process.env.APP_DOMAIN || 'http://localhost:3000/auth';
+  process.env.APP_DOMAIN || 'http://localhost:3000';
 
 /* ---------- ☁️  Cloudinary ---------- */
 export const CLOUDINARY = {
@@ -36,11 +36,5 @@ export const CLOUDINARY = {
 };
 
 /* ──────── 📂  Локальні каталоги для завантажень ──────── */
-/*  Ці константи потрібні utils/saveFileToUploadDir.js    */
-/*  TEMP_UPLOAD_DIR – куди спочатку зберігаємо файл       */
-/*  UPLOAD_DIR      – фінальна папка для статичних файлів */
-export const TEMP_UPLOAD_DIR = 'temp';     // ▶ додай/зміни за потреби
-export const UPLOAD_DIR      = 'public/uploads';   // ▶ додай/зміни за потреби
-
-
-
+export const TEMP_UPLOAD_DIR = 'temp';
+export const UPLOAD_DIR      = 'public';

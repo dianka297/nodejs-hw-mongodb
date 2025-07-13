@@ -3,7 +3,7 @@ import fs from 'node:fs/promises';
 import { TEMP_UPLOAD_DIR, UPLOAD_DIR } from '../constants/index.js';
 import { getEnvVar } from './getEnvVar.js';
 
-const UPLOADS_SUBFOLDER = 'uploads'; // ⬅️ создаём подпапку в public
+const UPLOADS_SUBFOLDER = 'uploads';
 
 const createDirIfNotExists = async (dir) => {
   try {
@@ -15,16 +15,13 @@ const createDirIfNotExists = async (dir) => {
 
 export const saveFileToUploadDir = async (file) => {
   const tempPath = path.join(TEMP_UPLOAD_DIR, file.filename);
-  const finalDir = path.join(UPLOAD_DIR, UPLOADS_SUBFOLDER); // public/uploads
-  const uploadPath = path.join(finalDir, file.filename);     // public/uploads/filename
+  const finalDir = path.join(UPLOAD_DIR, UPLOADS_SUBFOLDER);
+  const uploadPath = path.join(finalDir, file.filename);
 
-  // ✅ Убедиться, что public/uploads существует
   await createDirIfNotExists(finalDir);
-
-  // ✅ Переместить файл
   await fs.rename(tempPath, uploadPath);
 
-  // ✅ Вернуть публичную ссылку
   return `${getEnvVar('APP_DOMAIN')}/uploads/${file.filename}`;
 };
+
 
