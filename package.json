@@ -7,14 +7,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/**/*.js",
-    "dev": "nodemon src/server.js",
-    "start": "node index.js"
+    "dev": "tsx src/server.ts",
+    "start": "tsx --watch src/index.ts"
   },
   "keywords": [],
   "author": "dianka297",
   "license": "ISC",
   "devDependencies": {
     "@eslint/js": "^9.9.1",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.0.14",
+    "@types/qs": "^6.14.0",
     "eslint": "^9.9.1",
     "globals": "^15.9.0",
     "nodemon": "^3.1.4",
