@@ -12,7 +12,7 @@ import { parseFilterParams } from '../utils/parseFilterParams';
 import createHttpError from 'http-errors';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir';
 import { getEnvVariables } from '../utils/getEnvVariables';
-import { saveFileToCloudinary } from '../utils/sevaFileToCloudinary';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary';
 
 export const getContactsController: RequestHandler = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
@@ -140,5 +140,3 @@ export const deleteContactController: RequestHandler = async (req, res) => {
 
   res.status(204).send();
 };
-
-
