@@ -1,5 +1,5 @@
 import { SORT_ORDER } from '../constants/index.js';
-import { sortFields } from '../db/models/Contact.js';
+import { sortFields } from '../db/models/contacts.js';
 
 const parseSortParams = ({ sortBy, sortOrder }) => {
   const parsedSortBy = sortFields.includes(sortBy) ? sortBy : '_id';
