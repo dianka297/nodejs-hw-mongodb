@@ -1,16 +1,15 @@
-import nodemailer from 'nodemailer';
-import { SMTP } from '../constants/index.js';
-import { env } from '../utils/env.js';
+import path from 'node:path';
+import * as fs from 'node:fs/promises';
+import { TEMP_UPLOAD_DIR, UPLOAD_DIR } from '../constants/index.js';
+import { env } from './env.js';
 
-const transporter = nodemailer.createTransport({
-  host: env(SMTP.SMTP_HOST),
-  port: Number(env(SMTP.SMTP_PORT)),
-  auth: {
-    user: env(SMTP.SMTP_USER),
-    pass: env(SMTP.SMTP_PASSWORD),
-  },
-});
+const saveFileToUploadDir = async (file) => {
+  await fs.rename(
+    path.join(TEMP_UPLOAD_DIR, file.filename),
+    path.join(UPLOAD_DIR, file.filename),
+  );
 
-export const sendEmail = async (options) => {
-  return await transporter.sendMail(options);
+  return `${env('APP_DOMAIN')}/uploads/${file.filename}`;
 };
+
+export default saveFileToUploadDir;
