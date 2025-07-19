@@ -6,12 +6,12 @@ import handlebars from 'handlebars';
 import path from 'node:path';
 import fs from 'node:fs/promises';
 
-import UserCollection from '../db/models/User.js';
+import UserCollection from '../db/models/user.js';
 import {
   accessTokenLifetime,
   refreshTokenLifetime,
 } from '../constants/users.js';
-import SessionCollection from '../db/models/Session.js';
+import SessionCollection from '../db/models/session.js';
 import { env } from '../utils/env.js';
 import { SMTP, TEMPLATES_DIR } from '../constants/index.js';
 import { sendEmail } from '../utils/sendMail.js';
