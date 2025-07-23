@@ -10,13 +10,10 @@
     "description": "This is a documentation of contacts app"
   },
   "servers": [
-    {
-      "url": "http://localhost:3000"
-    },
-    {
-      "url": "https://contacts-app-oinz.onrender.com"
-    }
-  ],
+  {
+    "url": "https://nodejs-hw-mongodb-7-gvb3.onrender.com"
+  }
+],
   "tags": [
     {
       "name": "Contacts",
